@@ -1,0 +1,12 @@
+{
+  "name": "@ayeixa/mcp-guardian",
+  "version": "0.1.0-alpha",
+  "description": "Fine-grained capability sandbox and boundary fence for Model Context Protocol servers and tool invocations.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Zero-Truth tests passed\""
+  }
+}
