@@ -47,3 +47,6 @@ console.log("Execution Allowed:", verdict.allowed);
 
 ## License
 Distributed under the **Apache-2.0** License. See `LICENSE` for details.
+
+## Technical Deep Dive
+Read the full launch technical article: [`docs/blog/introducing-ayeixa-mcp-guardian.md`](docs/blog/introducing-ayeixa-mcp-guardian.md)
