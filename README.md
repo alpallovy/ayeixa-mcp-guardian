@@ -1,22 +1,49 @@
 # Ayeixa MCP Guardian
 
-> Fine-grained capability sandbox and boundary fence for Model Context Protocol servers and tool invocations.
+> Runtime sandboxing, parameter sanitization, and capability fence for Model Context Protocol (MCP).
 
-## Overview
-Ayeixa MCP Guardian is an open-source component developed under the Ayeixa Public-Good Flywheel.
-It provides modular, high-reliability infrastructure licensed under permissive **Apache-2.0**.
+## Status: Pre-Release (v0.1.0-alpha)
+*Note: Public npm registry publication is pending. To use or evaluate this package, clone and build locally.*
 
-## Quick Start
+## Features
+- **Capability-Based Permission Fence**: Granular RBAC and tool allowlists/denylists for MCP servers.
+- **Input Sanitization & Attack Prevention**: Hermetic path traversal blockers (`../`, `/etc`) and shell injection filters.
+- **Tamper-Evident Hash-Chained Audit Ledger**: Immutable SHA-256 cryptographic chain logging all invocations, payloads, and verdicts.
+- **Middleware Boundary Sandbox**: Drop-in MCP interceptor enforcing timeouts, permission checks, and fail-closed isolation.
+
+## Installation & Local Build
 ```bash
-npm install @ayeixa/mcp-guardian
+# Clone the repository
+git clone https://github.com/alpallovy/ayeixa-mcp-guardian.git
+cd ayeixa-mcp-guardian
+
+# Install dependencies and build
+npm install
+npm run build
+npm test
 ```
 
+## Quick Start
 ```typescript
-import { init } from '@ayeixa/mcp-guardian';
+import { GuardianSandbox, ToolPermissionFence, RuntimeAuditLogger } from './src';
 
-// Example Usage
-init()
+const fence = new ToolPermissionFence({
+  allowedTools: ['read_file', 'grep_search'],
+  blockedCommands: ['rm -rf', 'sudo', 'chmod 777']
+});
+const audit = new RuntimeAuditLogger();
+const sandbox = new GuardianSandbox(fence, audit);
+
+const verdict = await sandbox.evaluateAndExecute({
+  toolName: 'read_file',
+  arguments: { path: './src/index.ts' },
+  role: 'developer'
+}, async (args) => {
+  return "File contents";
+});
+
+console.log("Execution Allowed:", verdict.allowed);
 ```
 
 ## License
-Distributed under the Apache-2.0 License. See `LICENSE` for more information.
+Distributed under the **Apache-2.0** License. See `LICENSE` for details.

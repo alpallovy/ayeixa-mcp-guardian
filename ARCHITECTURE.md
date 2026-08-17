@@ -1,16 +1,14 @@
-# Architecture Specification: Ayeixa MCP Guardian
+# Architecture: Ayeixa MCP Guardian
 
-## System Overview
-Architecture overview for Ayeixa MCP Guardian
+## Overview
+Ayeixa MCP Guardian acts as a zero-trust security proxy between LLM agents and MCP tool execution environments.
 
-## Architecture Diagram (Mermaid)
+## System Topology
 ```mermaid
 flowchart TD
-    Client["Client Application / Runtime"] --> Router["Ayeixa MCP Guardian Core"]
-    Router --> Engine["Execution & Boundary Engine"]
-    Engine --> Output["Verified Output / State"]
+    Agent["LLM Tool Call"] --> Sandbox["Guardian Sandbox Interceptor"]
+    Sandbox --> Fence["Permission Fence & RBAC Policy"]
+    Sandbox --> Sanitizer["Path Traversal & Injection Sanitizer"]
+    Sanitizer --> Executor["Tool Execution Core"]
+    Executor --> Audit["SHA-256 Hash-Chained Audit Ledger"]
 ```
-
-## Design Guarantees
-- **Permissive & Standalone**: Operates hermetically without proprietary enterprise lock-in.
-- **Fail-Closed**: Rejects malformed or untrusted inputs at boundary layer.

@@ -1,9 +1,9 @@
-# Security Policy: Ayeixa MCP Guardian
+# Security Policy: ayeixa-mcp-guardian
 
 ## Supported Versions
-Only the latest release of Ayeixa MCP Guardian receives active security patches.
+Only the latest release receives active security patches.
 
 ## Reporting a Vulnerability
-If you discover a security vulnerability, please do NOT create a public issue.
-Report vulnerabilities confidentially through responsible disclosure.
-Security patches will be evaluated and released within 30 days per Phase 18 security SLAs.
+Please do NOT report security vulnerabilities via public GitHub issues.
+Report vulnerabilities confidentially via security advisory disclosure or to security@ayeixa.com.
+All reports will be acknowledged within 48 hours and remediated according to standard security practices.
