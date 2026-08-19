@@ -23,6 +23,18 @@ Thank you for your interest in contributing to ayeixa-mcp-guardian!
    ```
 5. **Create a Pull Request**: Submit your changes with clear descriptions and passing tests.
 
+## Good first issues
+
+Browse [issues labeled `good first issue`](https://github.com/alpallovy/ayeixa-mcp-guardian/labels/good%20first%20issue). Pick one issue, comment that you are working on it, and open a PR against `main`.
+
+## Pull request review criteria
+
+- `npm test` passes (required)
+- `npm run typecheck` passes (required)
+- One logical change per PR; link the issue if applicable
+- Bug fixes include repro steps or a failing test that the patch fixes
+- No unrelated refactors or drive-by formatting
+
 ## Standards
 - Strict TypeScript with zero type bypassing (`noAny`, full typings).
 - 100% passing hermetic unit and integration tests.
