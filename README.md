@@ -45,8 +45,19 @@ const verdict = await sandbox.evaluateAndExecute({
 console.log("Execution Allowed:", verdict.allowed);
 ```
 
+## Feedback & real-world use
+
+If you try this project in a real workflow, share technical feedback — including negative results or integration problems — in [Discussions](https://github.com/alpallovy/ayeixa-mcp-guardian/discussions/3). Participation is voluntary; no payment required. With explicit permission, useful experiences may become attributed or anonymized case studies.
+
 ## License
 Distributed under the **Apache-2.0** License. See `LICENSE` for details.
 
-## Technical Deep Dive
-Read the full launch technical article: [`docs/blog/introducing-ayeixa-mcp-guardian.md`](docs/blog/introducing-ayeixa-mcp-guardian.md)
+## Engineering blog
+
+- [MCP Guardian fail-closed design](https://alpallovy.github.io/ayeixa-blog/blog/mcp-guardian-fail-closed-design)
+- [Execution receipts in OSS utilities](https://alpallovy.github.io/ayeixa-blog/blog/execution-receipts-runtime-truth-oss)
+- [DEV Community intro](https://dev.to/alp_allovi_45214d2d8316a1/introducing-ayeixa-mcp-guardian-capability-fencing-parameter-sanitization-for-mcp-14dj)
+
+## Feedback
+
+After local evaluation (`npm test`), open a [GitHub issue](https://github.com/alpallovy/ayeixa-mcp-guardian/issues) with integration feedback. Case-study participation is not solicited until genuine external use exists.
