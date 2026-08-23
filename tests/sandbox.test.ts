@@ -24,4 +24,35 @@ describe('GuardianSandbox', () => {
     expect(audit.getLedger()).toHaveLength(1);
     expect(audit.getLedger()[0].verdict).toBe('ALLOWED');
   });
+
+  it.each([
+    [
+      'allowlist deny',
+      { toolName: 'delete_database', arguments: {}, role: 'agent' },
+      'TOOL_NOT_ALLOWED'
+    ],
+    [
+      'path traversal',
+      { toolName: 'read_file', arguments: { path: '../../secret' }, role: 'developer' },
+      'PATH_TRAVERSAL'
+    ]
+  ])('records structured context for %s', async (_name, invocation, reasonCode) => {
+    const audit = new RuntimeAuditLogger();
+    const sandbox = new GuardianSandbox(new ToolPermissionFence({
+      allowedTools: ['read_file'],
+      blockedCommands: []
+    }), audit);
+
+    await sandbox.evaluateAndExecute(invocation, async () => 'not run');
+
+    const record = audit.getLedger()[0];
+    expect(record).toMatchObject({
+      toolName: invocation.toolName,
+      role: invocation.role,
+      verdict: 'DENIED',
+      reasonCode
+    });
+    expect(record.timestamp).toEqual(expect.any(String));
+    expect(record).not.toHaveProperty('arguments');
+  });
 });

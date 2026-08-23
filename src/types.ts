@@ -11,13 +11,23 @@ export interface SecurityPolicy {
   allowedPathsRoot?: string;
 }
 
+export type DenialReasonCode = 'TOOL_NOT_ALLOWED' | 'PATH_TRAVERSAL' | 'COMMAND_BLOCKED';
+
+export interface PermissionEvaluation {
+  allowed: boolean;
+  reason?: string;
+  reasonCode?: DenialReasonCode;
+}
+
 export interface AuditLogRecord {
   index: number;
   timestamp: string;
   toolName: string;
+  role: string;
   argumentsDigest: string;
   verdict: 'ALLOWED' | 'DENIED' | 'ERROR';
   reason?: string;
+  reasonCode?: DenialReasonCode;
   previousHash: string;
   currentHash: string;
 }

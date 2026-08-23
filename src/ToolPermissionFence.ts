@@ -1,4 +1,4 @@
-import { SecurityPolicy, MCPToolInvocation } from './types';
+import { SecurityPolicy, MCPToolInvocation, PermissionEvaluation } from './types';
 import { InvocationSanitizer } from './InvocationSanitizer';
 
 export class ToolPermissionFence {
@@ -6,10 +6,14 @@ export class ToolPermissionFence {
 
   constructor(private policy: SecurityPolicy) {}
 
-  public evaluate(invocation: MCPToolInvocation): { allowed: boolean; reason?: string } {
+  public evaluate(invocation: MCPToolInvocation): PermissionEvaluation {
     // 1. Tool allowlist check
     if (!this.policy.allowedTools.includes(invocation.toolName)) {
-      return { allowed: false, reason: `Tool '${invocation.toolName}' is not in the security allowlist.` };
+      return {
+        allowed: false,
+        reason: `Tool '${invocation.toolName}' is not in the security allowlist.`,
+        reasonCode: 'TOOL_NOT_ALLOWED'
+      };
     }
 
     // 2. Argument inspections
@@ -17,12 +21,12 @@ export class ToolPermissionFence {
       if (typeof value === 'string') {
         if (key.toLowerCase().includes('path') || key.toLowerCase().includes('file')) {
           const pathCheck = this.sanitizer.sanitizePath(value, this.policy.allowedPathsRoot);
-          if (!pathCheck.safe) return { allowed: false, reason: pathCheck.reason };
+          if (!pathCheck.safe) return { allowed: false, reason: pathCheck.reason, reasonCode: 'PATH_TRAVERSAL' };
         }
 
         if (key.toLowerCase().includes('cmd') || key.toLowerCase().includes('command')) {
           const cmdCheck = this.sanitizer.sanitizeCommand(value, this.policy.blockedCommands);
-          if (!cmdCheck.safe) return { allowed: false, reason: cmdCheck.reason };
+          if (!cmdCheck.safe) return { allowed: false, reason: cmdCheck.reason, reasonCode: 'COMMAND_BLOCKED' };
         }
       }
     }
