@@ -7,24 +7,28 @@ export class RuntimeAuditLogger {
 
   public log(
     toolName: string,
+    role: string,
     args: Record<string, unknown>,
     verdict: 'ALLOWED' | 'DENIED' | 'ERROR',
-    reason?: string
+    reason?: string,
+    reasonCode?: AuditLogRecord['reasonCode']
   ): AuditLogRecord {
     const index = this.ledger.length;
     const timestamp = new Date().toISOString();
     const argsDigest = crypto.createHash('sha256').update(JSON.stringify(args || {})).digest('hex');
 
-    const payload = `${index}:${timestamp}:${toolName}:${argsDigest}:${verdict}:${this.lastHash}`;
+    const payload = `${index}:${timestamp}:${toolName}:${role}:${argsDigest}:${verdict}:${reasonCode || ''}:${this.lastHash}`;
     const currentHash = crypto.createHash('sha256').update(payload).digest('hex');
 
     const record: AuditLogRecord = {
       index,
       timestamp,
       toolName,
+      role,
       argumentsDigest: argsDigest,
       verdict,
       reason,
+      reasonCode,
       previousHash: this.lastHash,
       currentHash
     };
@@ -42,7 +46,7 @@ export class RuntimeAuditLogger {
     let prev = '0000000000000000000000000000000000000000000000000000000000000000';
     for (const record of this.ledger) {
       if (record.previousHash !== prev) return false;
-      const payload = `${record.index}:${record.timestamp}:${record.toolName}:${record.argumentsDigest}:${record.verdict}:${prev}`;
+      const payload = `${record.index}:${record.timestamp}:${record.toolName}:${record.role}:${record.argumentsDigest}:${record.verdict}:${record.reasonCode || ''}:${prev}`;
       const expected = crypto.createHash('sha256').update(payload).digest('hex');
       if (record.currentHash !== expected) return false;
       prev = record.currentHash;

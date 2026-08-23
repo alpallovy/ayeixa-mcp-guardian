@@ -15,7 +15,14 @@ export class GuardianSandbox {
     const evaluation = this.fence.evaluate(invocation);
 
     if (!evaluation.allowed) {
-      const record = this.audit.log(invocation.toolName, invocation.arguments, 'DENIED', evaluation.reason);
+      const record = this.audit.log(
+        invocation.toolName,
+        invocation.role,
+        invocation.arguments,
+        'DENIED',
+        evaluation.reason,
+        evaluation.reasonCode
+      );
       return {
         allowed: false,
         rejectionReason: evaluation.reason,
@@ -25,7 +32,7 @@ export class GuardianSandbox {
 
     try {
       const result = await executor(invocation.arguments);
-      const record = this.audit.log(invocation.toolName, invocation.arguments, 'ALLOWED');
+      const record = this.audit.log(invocation.toolName, invocation.role, invocation.arguments, 'ALLOWED');
       return {
         allowed: true,
         result,
@@ -33,7 +40,7 @@ export class GuardianSandbox {
       };
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      const record = this.audit.log(invocation.toolName, invocation.arguments, 'ERROR', errMsg);
+      const record = this.audit.log(invocation.toolName, invocation.role, invocation.arguments, 'ERROR', errMsg);
       return {
         allowed: false,
         rejectionReason: errMsg,
